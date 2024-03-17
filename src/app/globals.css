@@ -3,14 +3,6 @@
 @tailwind utilities;
 
 body {
-    height: 100vh;
+    min-height: 100vh;
     background: linear-gradient(184deg, #fd749b 2.31%, #281ac8 66.14%);
 }
-
-.customButton {
-    background-color: white;
-    color: black;
-    font-size: 12px;
-    font-weight: 600;
-    border-radius: 50px;
-    font-family: 'Poppins', sans-serif;}

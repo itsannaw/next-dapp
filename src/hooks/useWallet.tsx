@@ -1,14 +1,21 @@
 import { useState, useEffect } from "react";
-import { getProvider, updateWallet } from "../services/ethereumService";
+import {
+  getProviderAndAccounts,
+  updateWallet,
+} from "../services/ethereumService";
+import { EthereumEvents, RequestMethods } from "@/const";
 
 const useWallet = () => {
-  const [hasProvider, setHasProvider] = useState<boolean | null>(null);
   const initialState = { accounts: [], balance: "", chainId: "" };
-  const [wallet, setWallet] = useState(initialState);
-  const [isConnecting, setIsConnecting] = useState(false);
-  const [error, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
 
+  const [hasProvider, setHasProvider] = useState<boolean | null>(null);
+  const [wallet, setWallet] = useState(initialState);
+  const [isConnecting, setIsConnecting] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const firstAccount = wallet.accounts?.[0];
+
+  // todo: i need zustand to make state accesable everywhere
+  // отдельный кастомный хук только для пейдж
   useEffect(() => {
     const refreshAccounts = (accounts: any) => {
       if (accounts.length > 0) {
@@ -22,11 +29,22 @@ const useWallet = () => {
       setWallet((wallet) => ({ ...wallet, chainId }));
     };
 
-    getProvider(setHasProvider, refreshAccounts, refreshChain);
+    getProviderAndAccounts(
+      setHasProvider,
+      refreshAccounts,
+      refreshChain,
+      setIsConnecting
+    );
 
     return () => {
-      window.ethereum?.removeListener("accountsChanged", refreshAccounts);
-      window.ethereum?.removeListener("chainChanged", refreshChain);
+      window.ethereum?.removeListener(
+        EthereumEvents.AccountsChanged,
+        refreshAccounts
+      );
+      window.ethereum?.removeListener(
+        EthereumEvents.ChainChanged,
+        refreshChain
+      );
     };
   }, []);
 
@@ -34,28 +52,30 @@ const useWallet = () => {
     setIsConnecting(true);
     try {
       const accounts = await window.ethereum.request({
-        method: "eth_requestAccounts",
+        method: RequestMethods.RequestAccounts,
       });
-      setError(false);
+      setErrorMessage("");
       updateWallet(accounts, setWallet);
     } catch (err: any) {
-      setError(true);
       setErrorMessage(err.message);
+    } finally {
+      setIsConnecting(false);
     }
-    setIsConnecting(false);
   };
 
   const handleDisconnect = async () => {
     try {
-        await window.ethereum.request({
-          method: 'wallet_revokePermissions',
-          params: [{
-            eth_accounts: {}
-          }]
-        });
-        setWallet(initialState);
+      await window.ethereum.request({
+        method: RequestMethods.RevokeWalletPermissions,
+        params: [
+          {
+            eth_accounts: {},
+          },
+        ],
+      });
+      setErrorMessage("");
+      setWallet(initialState);
     } catch (err: any) {
-      setError(true);
       setErrorMessage(err.message);
     }
   };
@@ -64,11 +84,11 @@ const useWallet = () => {
     hasProvider,
     wallet,
     isConnecting,
-    error,
     errorMessage,
+    setErrorMessage,
     handleConnect,
     handleDisconnect,
-    setError,
+    firstAccount,
   };
 };
 

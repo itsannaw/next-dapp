@@ -21,6 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={font.className}>
+      <link rel="icon" href="/icon.svg" sizes="any" />
         <Navbar /> {children}
       </body>
     </html>
