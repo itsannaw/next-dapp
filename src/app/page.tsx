@@ -24,7 +24,7 @@ const App = () => {
 
   const hasProviderTemplate = (
     <>
-      {window.ethereum?.isMetaMask && !wallet.accounts.length && (
+      {typeof window !== 'undefined' && window.ethereum?.isMetaMask && !wallet.accounts.length && (
         <>
           <div className="flex flex-col gap-10 max-w-[529px] max-sm:items-center">
             <div className="flex flex-col text-4xl text-white sm:text-start text-center font-semibold leading-normal">
