@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import useWallet from "@/hooks/useWallet";
-import { Alert } from "@mui/material";
+import { Alert, CircularProgress } from "@mui/material";
 import Image from "next/image";
 import CustomButton from "@/components/buttons/CustomButton";
 import SendTransaction from "@/components/ui/forms/SendTransaction";
@@ -69,9 +69,10 @@ const App = () => {
     </div>
   );
 
-  // todo: spinner
   return isConnecting ? (
-    <></>
+    <div className="flex justify-center items-center mt-5 md:mt-10 p-6">
+      <CircularProgress color="inherit" />
+    </div>
   ) : (
     <div className="flex justify-center items-center mt-5 md:mt-10 p-6">
       {hasProvider ? hasProviderTemplate : downloadMetaMaskTemplate}

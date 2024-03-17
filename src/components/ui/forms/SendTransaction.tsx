@@ -39,7 +39,7 @@ const SendTransaction = () => {
 
   return (
     <div className="flex flex-col mt-10 md:mt-20 gap-5 text-center border-2 border-white p-10 bg-white box-shadow-2xl rounded-2xl">
-      <span className="text-base font-semibold">Send transactions</span>
+      <span className="text-base font-semibold">Send transaction</span>
       <TextField
         label="To"
         variant="outlined"
