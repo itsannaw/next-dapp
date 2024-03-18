@@ -8,6 +8,11 @@ export enum RequestMethods {
 }
 
 export enum EthereumEvents {
-    ChainChanged = "chainChanged",
-    AccountsChanged = "accountsChanged",
+  ChainChanged = "chainChanged",
+  AccountsChanged = "accountsChanged",
+}
+
+export enum ChainId {
+  Ethereum = "0x1",
+  BNB = "0x38",
 }

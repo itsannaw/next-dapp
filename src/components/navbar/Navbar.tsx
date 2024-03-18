@@ -2,6 +2,7 @@
 import { AppBar, Toolbar } from "@mui/material";
 import useWallet from "@/hooks/useWallet";
 import CustomButton from "../buttons/CustomButton";
+import { ChainId } from "@/const";
 
 const Navbar = () => {
   const { wallet, firstAccount, handleDisconnect } = useWallet();
@@ -21,8 +22,8 @@ const Navbar = () => {
             </span>
             <div className="flex gap-1">
               <div>Balance: {wallet.balance}</div>
-              {wallet.chainId === "0x1" && <div>ETH</div>}
-              {wallet.chainId === "0x38" && <div>BNB</div>}
+              {wallet.chainId === ChainId.Ethereum && <div>ETH</div>}
+              {wallet.chainId === ChainId.BNB && <div>BNB</div>}
             </div>
             <CustomButton
               text="Etherscan"
