@@ -19,7 +19,11 @@ const Navbar = () => {
             <span className="text-[10px] md:text-xs lg:text-sm">
               🟢 {firstAccount}
             </span>
-            <div>Balance: {wallet.balance}</div>
+            <div className="flex gap-1">
+              <div>Balance: {wallet.balance}</div>
+              {wallet.chainId === "0x1" && <div>ETH</div>}
+              {wallet.chainId === "0x38" && <div>BNB</div>}
+            </div>
             <CustomButton
               text="Etherscan"
               size="small"
