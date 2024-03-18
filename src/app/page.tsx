@@ -5,6 +5,7 @@ import { Alert, CircularProgress } from "@mui/material";
 import Image from "next/image";
 import CustomButton from "@/components/buttons/CustomButton";
 import SendTransaction from "@/components/ui/forms/SendTransaction";
+import useUpdateWallet from "@/hooks/useUpdateWallet";
 
 const App = () => {
   const {
@@ -15,16 +16,16 @@ const App = () => {
     errorMessage,
     handleConnect,
   } = useWallet();
+  useUpdateWallet();
 
   const disableConnect = Boolean(wallet) && isConnecting;
 
   const handleDownloadClick = () => {
     window.open("https://metamask.io/download/", "_blank");
   };
-
   const hasProviderTemplate = (
     <>
-      {typeof window !== 'undefined' && window.ethereum?.isMetaMask && !wallet.accounts.length && (
+      {
         <>
           <div className="flex flex-col gap-10 max-w-[529px] max-sm:items-center">
             <div className="flex flex-col text-4xl text-white sm:text-start text-center font-semibold leading-normal">
@@ -49,7 +50,7 @@ const App = () => {
             />
           </div>
         </>
-      )}
+      }
     </>
   );
 
@@ -75,7 +76,11 @@ const App = () => {
     </div>
   ) : (
     <div className="flex justify-center items-center mt-5 md:mt-10 p-6">
-      {hasProvider ? hasProviderTemplate : downloadMetaMaskTemplate}
+      {!hasProvider && downloadMetaMaskTemplate}
+      {hasProvider &&
+        window?.ethereum?.isMetaMask &&
+        !wallet.accounts.length &&
+        hasProviderTemplate}
       {wallet.accounts.length > 0 && <SendTransaction />}
       {errorMessage && (
         <div
